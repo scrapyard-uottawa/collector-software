@@ -72,6 +72,8 @@ class ledIndicator:
             garbageType: the type of garbage to set the leds to
         Returns:
             None
+        Throws:
+            KeyError: if the garbageType has not been declared led_pixel_config
         '''
         self.clearAllLeds()
         # Check if the garbage type is valid
