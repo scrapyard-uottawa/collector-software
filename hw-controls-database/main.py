@@ -3,12 +3,9 @@ from time import sleep
 
 ledIndicator = ledIndicator()
 
-while True:
-    ledIndicator.setGarbageType("blackBin")
-    sleep(5)
-    ledIndicator.setGarbageType("blueBin")
-    sleep(5)
-    ledIndicator.setGarbageType("garbage")
-    sleep(5)
-    ledIndicator.setGarbageType("compost")
-    sleep(5)
+ledIndicator.setAllLeds(Color(255, 255, 255))
+sleep(10)
+ledIndicator.clearAllLeds()
+sleep(2)
+ledIndicator.setLedRoation()
+sleep(20)

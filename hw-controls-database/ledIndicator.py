@@ -8,29 +8,6 @@ LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False    # True to invert the signal
 LED_CHANNEL = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
-led_pixel_config = {
-    "blackBin": {
-        "start": 0,
-        "end": 10,
-        "color": Color(255, 0, 0)
-    },
-    "blueBin": {
-        "start": 10,
-        "end": 20,
-        "color": Color(0, 255, 0)
-    },
-    "garbage": {
-        "start": 20,
-        "end": 30,
-        "color": Color(0, 0, 255)
-    },
-    "compost": {
-        "start": 30,
-        "end": 40,
-        "color": Color(255, 255, 0)
-    }
-}
-
 
 class ledIndicator:
     def __init__(self,) -> None:
@@ -52,35 +29,31 @@ class ledIndicator:
             self.ledStrip.setPixelColor(i, Color(0, 0, 0))
         self.ledStrip.show()
 
-    def setLedArray(self, startLed: int, endLED: int, color: Color) -> None:
+    def setAllLeds(self, color: Color) -> None:
         '''
-            Sets the color of certain leds in the led strip
+            Sets all leds to the same color
         Args:
-            startLED: the first led to set
-            endLED: the last led to set
             color: the color to set the leds to
         Returns:
             None
-        '''
-        for i in range(startLed, endLED):
+            '''
+        for i in range(self.ledStrip.numPixels()):
             self.ledStrip.setPixelColor(i, color)
         self.ledStrip.show()
 
-    def setGarbageType(self, garbageType: str) -> None:
-        ''' Sets the color of the leds to the color of the garbage type
+    def setLedRoation(self, color=Color(0, 0, 255), wait_ms=50, iterations=10) -> None:
+        '''
+            Sets the color of the leds in a rotation
         Args:
-            garbageType: the type of garbage to set the leds to
+            color: the color to set the leds to
         Returns:
             None
-        Throws:
-            KeyError: if the garbageType has not been declared led_pixel_config
-        '''
-        self.clearAllLeds()
-        # Check if the garbage type is valid
-        if garbageType in led_pixel_config:
-            pixelC = led_pixel_config[garbageType]
-            self.setLedArray(pixelC["start"], pixelC["end"], pixelC["color"])
-
-        # Throw an error if the garbage type is not valid
-        else:
-            raise ValueError("Invalid garbage type")
+            '''
+        for j in range(iterations):
+            for q in range(3):
+                for i in range(0, self.ledStrip.numPixels(), 3):
+                    self.ledStrip.setPixelColor(i + q, color)
+                self.ledStrip.show()
+                self.ledStrip.sleep(wait_ms / 1000.0)
+                for i in range(0, self.ledStrip.numPixels(), 3):
+                    self.ledStrip.setPixelColor(i + q, 0)
