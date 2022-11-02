@@ -3,23 +3,27 @@ import time
 import datetime
 import numpy as np
 
+import firebaseClient
+
 # https://automaticaddison.com/how-to-detect-and-draw-contours-in-images-using-opencv/
 # https://stackoverflow.com/questions/28013435/how-i-can-count-bounding-boxes-in-each-frame
 
 
 def main():
     # 0 sets to video camera and 1 for webcam
-    capture = cv2.VideoCapture(0)
+    capture = cv2.VideoCapture(1)
     # image = cv2.imread('bottle.jpg')
     # need sleep time to connect to camera image
     time.sleep(10)
     while True:
         true, image = capture.read()
 
-        time.sleep(5)
+        time.sleep(2)
         if testForObjet(image):
             # object detected sleep for time and send to db
-            time.sleep(5)
+            time.sleep(1)
+
+
 
 
 def testForObjet(image):
@@ -38,7 +42,7 @@ def testForObjet(image):
 
     # find the contures
     contours, hierarchy = cv2.findContours(
-        imageInverted, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        imageInverted, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     # draw contures on a copy of the image
     imageContures = image.copy()
@@ -46,23 +50,22 @@ def testForObjet(image):
 
     for c in contours:
         (x, y, w, h) = cv2.boundingRect(c)
-        print(w)
-        print(h)
         # if detected contures have above a certain width and hight then an object was detected.
         if w >= 20 and h >= 20:
             print("here 2")
             imageRectangle = image.copy()
             cv2.rectangle(imageRectangle, (x, y), (x+w, y+h), (0, 255, 0), 3)
             cv2.putText(imageRectangle, "object detected", org=(
-                50, 50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 255, 0), thickness=2, lineType=cv2.FILLED)
-            cv2.imwrite('objetDetected 2' +
-                        str(datetime.datetime.now()) + '.png', imageRectangle)
+                    50, 50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 255, 0), thickness=2, lineType=cv2.FILLED)
+            cv2.imwrite('objetDetected.png', imageRectangle)
+            fbClient.uploadNewCollectionEvent('objetDetected.png', 0.0, 'UNKNOWN')
 
-            return True
-    return False
-    # cv2.imshow('detection', image)
+    # cv2.imshow('detection', imageContures)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
+    
+    return True
 
 
+fbClient = firebaseClient.firebaseClient("4HD4nUV5Kkkkt4AUxmSC")
 main()
