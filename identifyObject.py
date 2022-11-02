@@ -18,7 +18,7 @@ def main():
 
         time.sleep(5)
         if testForObjet(image):
-            # object detected
+            # object detected sleep for time and send to db
             time.sleep(5)
 
 
@@ -59,7 +59,7 @@ def testForObjet(image):
                         str(datetime.datetime.now()) + '.png', imageRectangle)
 
             return True
-
+    return False
     # cv2.imshow('detection', image)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
