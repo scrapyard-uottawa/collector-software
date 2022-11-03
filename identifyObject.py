@@ -2,7 +2,6 @@ import cv2
 import time
 import datetime
 import numpy as np
-
 import firebaseClient
 
 # https://automaticaddison.com/how-to-detect-and-draw-contours-in-images-using-opencv/
@@ -14,16 +13,14 @@ def main():
     capture = cv2.VideoCapture(1)
     # image = cv2.imread('bottle.jpg')
     # need sleep time to connect to camera image
-    time.sleep(10)
+    time.sleep(2)
     while True:
         true, image = capture.read()
 
-        time.sleep(2)
+        time.sleep(5)
         if testForObjet(image):
             # object detected sleep for time and send to db
-            time.sleep(1)
-
-
+            time.sleep(5)
 
 
 def testForObjet(image):
@@ -32,39 +29,46 @@ def testForObjet(image):
     # needs to send to db
 
     # turn image greyscale
-    imagegrey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    imageGrey = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    ret, imageBinary = cv2.threshold(
-        imagegrey, 100, 255, cv2.THRESH_OTSU)
+    #imageBlur = cv2.GaussianBlur(imageGrey, (5, 5), 0)
+    ret3, imageBinary = cv2.threshold(
+        imageGrey, 127, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    print(ret3)
 
-    # invert the image
-    imageInverted = ~imageBinary
+    cv2.imwrite('objetDetected 2' +
+                str(datetime.datetime.now()) + '.png', imageBinary)
 
     # find the contures
     contours, hierarchy = cv2.findContours(
-        imageInverted, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+        imageBinary, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     # draw contures on a copy of the image
     imageContures = image.copy()
     cv2.drawContours(imageContures, contours, -1, (0, 255, 0), 3, 32)
-
+    imageRectangle = image.copy()
     for c in contours:
         (x, y, w, h) = cv2.boundingRect(c)
         # if detected contures have above a certain width and hight then an object was detected.
-        if w >= 20 and h >= 20:
-            print("here 2")
-            imageRectangle = image.copy()
+        detected = False
+        if 1920 > w and w >= 50 and h >= 50 and 1080 > h and 130 > ret3:
+            detected = True
             cv2.rectangle(imageRectangle, (x, y), (x+w, y+h), (0, 255, 0), 3)
-            cv2.putText(imageRectangle, "object detected", org=(
-                    50, 50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 255, 0), thickness=2, lineType=cv2.FILLED)
-            cv2.imwrite('objetDetected.png', imageRectangle)
-            fbClient.uploadNewCollectionEvent('objetDetected.png', 0.0, 'UNKNOWN')
+    cv2.imwrite('objetDetected 2' +
+                str(datetime.datetime.now()) + '.png', imageContures)
+    if detected:
+        #cv2.putText(imageRectangle, "object detected", org=( 50, 50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 255, 0), thickness=2, lineType=cv2.FILLED)
+        cv2.imwrite('objetDetected.png', imageRectangle)
+        fbClient.uploadNewCollectionEvent('objetDetected.png', 0.0, 'UNKNOWN')
+        print("detected")
+    else:
+        print("no detection")
 
-    # cv2.imshow('detection', imageContures)
+    return detected
+
+    # cv2.imshow('detection', image)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    
-    return True
 
 
 fbClient = firebaseClient.firebaseClient("4HD4nUV5Kkkkt4AUxmSC")
