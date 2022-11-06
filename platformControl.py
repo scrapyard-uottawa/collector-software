@@ -44,5 +44,3 @@ b.movePlatform(BinType.BLACK_BIN)
 b.movePlatform(BinType.BLUE_BIN)
 b.movePlatform(BinType.GARBAGE)
 b.movePlatform(BinType.BLUE_BIN)
-
-
