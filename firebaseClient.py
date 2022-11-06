@@ -24,10 +24,11 @@ class firebaseClient:
         self.dbCollection = db.collection(u'machines').document(self.machine_id).collection(u'detections')
 
 
-    def uploadNewCollectionEvent(self, imagePath:str, machineLearningConfidence, wasteType: str):
+    def uploadNewCollectionEvent(self, imagePath:str, machineLearningConfidence:float, wasteType: str):
         """Upload a new collection event to firebase
 
         Args:
+            imagePath (str): the path to the image
             machineLearningConfidence (float): the confidence of the machine learning model
             wasteType (str): the type of the waste
         """
