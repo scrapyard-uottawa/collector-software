@@ -1,0 +1,12 @@
+# MACOS
+.DS_Store
+# Windows
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Specific 
+objectDetection.png
+serviceAccountKey.json
