@@ -17,7 +17,7 @@ import zipfile
 import argparse
 #import firebaseClient 
 
-
+#test
 # https://opencv-tutorial.readthedocs.io/en/latest/yolo/yolo.html#identifiy-objects
 
 def main():
