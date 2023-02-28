@@ -2,7 +2,7 @@ import cv2
 import time
 import datetime
 import numpy as np
-import firebaseClient
+#import firebaseClient
 
 # https://automaticaddison.com/how-to-detect-and-draw-contours-in-images-using-opencv/
 # https://stackoverflow.com/questions/28013435/how-i-can-count-bounding-boxes-in-each-frame
@@ -10,10 +10,10 @@ import firebaseClient
 
 def main():
     # 0 sets to video camera and 1 for webcam
-    capture = cv2.VideoCapture(1)
+    capture = cv2.VideoCapture(0)
     # image = cv2.imread('bottle.jpg')
     # need sleep time to connect to camera image
-    time.sleep(2)
+    time.sleep(10)
     while True:
         true, image = capture.read()
 
@@ -59,7 +59,7 @@ def testForObjet(image):
     if detected:
         #cv2.putText(imageRectangle, "object detected", org=( 50, 50), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=1, color=(0, 255, 0), thickness=2, lineType=cv2.FILLED)
         cv2.imwrite('objetDetected.png', imageRectangle)
-        fbClient.uploadNewCollectionEvent('objetDetected.png', 0.0, 'UNKNOWN')
+        #fbClient.uploadNewCollectionEvent('objetDetected.png', 0.0, 'UNKNOWN')
         print("detected")
     else:
         print("no detection")
@@ -71,5 +71,5 @@ def testForObjet(image):
     # cv2.destroyAllWindows()
 
 
-fbClient = firebaseClient.firebaseClient("4HD4nUV5Kkkkt4AUxmSC")
+#fbClient = firebaseClient.firebaseClient("4HD4nUV5Kkkkt4AUxmSC")
 main()
